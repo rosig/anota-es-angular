@@ -43,13 +43,40 @@
 > **Interpolation** : component -> template
 
 ```
-<p>{{nome-da-variavel}}</p>
+<p>{{ nome-da-variavel }}</p>
+<p>{{ 1 + 1 }}</p>
+<p>{{ 1 + getValor() }}</p>
+<p>{{ isAngular && true }}</p>
 ```
 
 > **Property binding** : component -> template
 
 ```
 <p [propriedade]="valor"></p>
+<p bind-propriedade="valor"></p>
+<p propriedade={{ valor }}></p>
+
+Quando não existe uma propriedade no elemento, usa-se [attr.nomePropriedade]
+```
+
+```
+<article>
+  <h3>Class & Style Binding</h3>
+  <div>
+    Selecione uma classe:
+    <select #classe (change)="0">
+      <option value="alert-success">success</option>
+      <option value="alert-danger">danger</option>
+    </select>
+
+    <div class="alert {{ classe.value }}" role="alert"></div>
+
+    <div class="alert" role="alert" [class.alert-success]="classe.value === 'alert-success'">success</div>
+    <div class="alert" role="alert" [class.alert-danger]="classe.value === 'alert-danger'">danger</div>
+
+    <div class="alert alert-danger" role="alert" [style.display]="classe.value === 'alert-danger' ? 'block' : 'none'">Esse texto só aparece em caso de erro!</div>
+  </div>
+</article>
 ```
 
 > **Event binding** : template -> component
@@ -58,7 +85,7 @@
 <p (evento)="handler"></p>
 ```
 
-> **Two-way binding** : template -> component
+> **Two-way binding** : template -> component | component -> template ( obs: não esquecer do módulo _FormsModule_ para o two-way data binding funcionar.)
 
 ```
 <p [(ngModel)]="propriedade"></p>
