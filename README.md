@@ -4,7 +4,7 @@
 
 > @Component: permite marcar uma classe como um componente Angular e fornecer metadados adicionais que determinam como o componente deve ser processado, instanciado e usado. Os componentes são o bloco de construção mais básico de uma interface do usuário em um aplicativo Angular.
 
-> @Injectable: a classe poderá ser injentada e utilizada em outra classe.
+> @Injectable: a classe poderá ser injentada e utilizada em outra classe. Utilizado para criar serviços.
 
 > @NgModule: a classe passará a ser usada como um módulo
 
@@ -52,7 +52,40 @@ incrementa() {
 
 ### 3. O código dentro de um **componente** deve ser responsável apenas por mostrar as informações para o usuário e interarir que o mesmo.
 
-### 4. Um **serviço** é responsável por fazer a comunicação com o servidor ou outras tarefas que não sejam a função do componente.
+### 4. Um **serviço** é responsável por fazer a comunicação com o servidor ou outras tarefas que não sejam a função do componente. Fornece lógica de negócio e evita código duplicado.
+
+1. Um serviço pode ser compartilhado para a aplicação através do _providers_ dos módulos.
+2. Quando o serviço é colocado no providers de _app.module.ts_, então toda a aplicação terá acesso a mesma instância do mesmo.
+3. O serviço também pode ser utilizado nos providers de outros módulos além do _app.module.ts_.
+4. Caso seja necessário criar instâncias diferentes de um mesmo serviço em componentes diferentes, então pode-se definir um _providers_ como parâmetro no decorator _@Component_ e colocar o serviço. Assim, será criado uma instância exclusiva daquele serviço para o componente em questão. Segue exemplo abaixo:
+
+```
+@Component({
+  selector: "app-criar-curso",
+  templateUrl: "./criar-curso.component.html",
+  styleUrls: ["./criar-curso.component.css"],
+  providers: [CursosService],
+})
+```
+
+5. No caso de existir instâncias diferentes do mesmo serviço, como dito em (4), é possível ainda assim fazer a comunicação entre elas através de um broadcast de eventos.
+
+```
+No serviço:
+
+static criouNovoCurso = new EventEmitter<string>();
+
+function acionaEvento() {
+  CursosService.criouNovoCurso.emit(curso);
+}
+
+No componente que aciona o evento: Chama função acionaEvento()
+
+No componente que ouve o evento:
+
+CursosService.criouNovoCurso.subscribe((curso) => this.cursos.push(curso));
+
+```
 
 ### 5. **Injeção de depedência** é fazer com que o angular já forneça uma instância de uma classe pronta, sem precisar usar _new NomeClasse_ em todos os lugares que forem utilizar _NomeClasse_. A instância é criada no construtor e a depender da versão do angular, deve ser adicionada a definição da classe no _providers_ do módulo.
 
