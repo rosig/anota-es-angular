@@ -69,6 +69,7 @@ incrementa() {
 ```
 
 5. No caso de existir instâncias diferentes do mesmo serviço, como dito em (4), é possível ainda assim fazer a comunicação entre elas através de um broadcast de eventos.
+6. É possível injetar serviços em outros serviços, declarando o serviço a ser utilizado no módulo e utilizando-o através de injeção de dependência.
 
 ```
 No serviço:
@@ -422,6 +423,38 @@ export class NgElseDirective {
   ) { }
 
 }
+```
+
+### 9. **Rotas**
+
+#### Guards
+
+1. CanActivate e CanActivateChild (serve parar fazer controle de acesso de alguma rota da aplicação)
+
+- retorno (boolean | Observable<boolean>) : se **true**, o usuário poder utilizar a rota; se **false**, não.
+- é possível chamar um serviço dentro do guard, para acessar algum servidor e verificar se o usuário pode acessar algo
+
+> A depender de onde o guarda de rota deva ser executado, devemos declará-lo em um lugar diferente. Caso ele deva ser utilizado em todas as rotas incluindo o componente pai, então declara-se no app.routing.module. Caso ele deva ser utilizado apenas nas rotas filhas e não incluir o componente pai, então declara-se no módulo de rotas das rotas filhas.
+
+2. CanDeactivate: serve parar fazer controle de saída de alguma rota da aplicação.
+
+3. Resolve: responsável por carregar dados antes da rota serr ativada.
+
+4. canLoad: verifica se o usuário pode carregar o código do módulo. Utilizado com lazy-loading pra evitar que o arquivo da página seja baixado por trás dos panos, mesmo que o usuário que não possa acessar a rota.
+
+```
+1. Conceito principal
+  Fazer o controle de acesso em algumas partes de aplicação, permitir ou não que o usuário faça algo.
+
+2. O que a função tem q retornar e pra quê?
+  boolean | Observable<boolean> => se **true**, o usuário poder utilizar a rota; se **false**, não.
+
+3. Fluxo
+  - Os guardas carregam antes do ngOnInit do componente que ele está 'guardando'. E o ngOnInit nem será chamado caso o guard não permita.
+  - Os guardas carregam antes do serviço que ele está utilizando
+
+4. Código no guard
+  O guard deve contar apenas a lógica de proteção das rotas. Podendo chamar (injentar) algum serviço, para acessar algum servidor e verificar se o usuário pode acessar algo.
 ```
 
 # Comandos
